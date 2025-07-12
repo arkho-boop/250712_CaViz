@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Waffle Visualisation</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    body {
+      background: #181a1b;
+      color: #f3f3f3;
+    }
+    select {
+      background: #232527;
+      color: #f3f3f3;
+      border: 1px solid #444;
+    }
+    #headshot {
+      border-color: #444;
+      background: #232527;
+    }
+    .waffle-wrapper {
+      background: none;
+    }
+    .waffle-set {
+      background: none;
+    }
+    .waffle-grid {
+      background: none;
+    }
+    .dot {
+      background: #444;
+      border-color: transparent;
+    }
+    .dot.highlight {
+      border: 2px solid #fff !important;
+    }
+    .date-label {
+      color: #bbb;
+    }
+    .summary {
+      color: #bbb;
+    }
+    #assessor-count-span, #grants-amount-span {
+      /* color and underline will still be set by JS, but fallback to white for contrast */
+      color: #fff;
+      text-decoration-color: #fff;
+    }
+  }
+
+    select {
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    #headshot {
+      display: block;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      transition: opacity 0.5s ease, border 0.3s;
+      border: 4px solid #ccc;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+
+    .waffle-wrapper {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .waffle-set {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .waffle-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 8px);
+      grid-gap: 2px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 60px; /* Adjust as needed for your design */
+      align-content: center;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 25%;
+      background: #ccc;
+      border: 2px solid transparent;
+      transition: border 0.3s ease, opacity 0.3s ease;
+    }
+
+    .dot.highlight {
+      border: 2px solid black; /* black highlight, adjust as needed */
+      opacity: 1;
+    }
+
+    .date-label {
+      margin-bottom: 0px;
+      font-size: 11px;
+      padding-left: 1px;
+      padding-right: 1px;
+    }
+
+    .summary {
+      margin-top: 8px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body style="width: 100%; max-width: 600px; min-width: 300px;padding:0px;margin: 0px; border: 0px;">
+    <div id="top-wrapper" style="float:left; width:100%; padding:0px;margin: 0px; border: 0px;">
+        <div id="top-contents" style="margin:auto; display:flex; flex-direction:column; align-items:center;">
+            <h2>Title</h2>
+            <p style="width:300px; line-height: 1.5;">            
+                <select id="personDropdown" style="margin: 0px; padding: 2px;">
+                  <option value="ELOISEGRILLS">Eloise Grills</option>
+                  <option value="GRACEHEIFITZ">Grace Heifitz</option>
+                  <option value="FIONAWRIGHT">Fiona Wright</option>
+                  <option value="JULIEJANSON">Julie Janson</option>
+                  <option value="EMILYBITTO" selected>Emily Bitto</option>
+                  <option value="OUYANGYU">Ouyang Yu</option>
+                  <option value="INGASIMPSON">Inga Simpson</option>
+                </select>
+                has been an peer assessor <span id="assessor-count-span" style="font-weight: 600; text-decoration: underline; text-decoration-thickness: 3px; color:red">4 times</span> also been recommended to receive <span id="grants-amount-span" style="font-weight: 600; text-decoration: underline; text-decoration-thickness: 3px; color:red">$45,300</span> in grants from panels from this group has been on. 
+            </p>
+
+            <img id="headshot" src="https://placehold.co/120x120?text=Alice" alt="Headshot" />
+        </div>
+    </div>
+
+    <div class="waffle-wrapper" style="float:left; margin-right:auto;margin-left:auto;width:100%">
+        <div id="waffle-contents" style="display: flex; flex-direction:column; align-items: center;width:100%">
+            <div id="waffles" style="display: flex; flex-direction: row; gap: 0px;">
+                <div class="waffle-labels" style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:40px;font-weight:300;font-size:9px;">
+                  <div style="min-height: 17px; width: 100%; display: block;"></div>
+                  <div style="min-height: 60px; width: 100%; display: flex; align-items: center; justify-content: right;">PANEL</div>
+                  <div style="min-height: 15px; width: 100%; display: block;"></div>
+                  <div style="min-height: 60px; width: 100%; display: flex; align-items: center; justify-content: right;">GRANTEES</div>
+                </div>
+                <div class="waffle-set" data-panel-code="01-10-19-P170">
+                    <div class="date-label">2019 Oct</div>
+                    <div class="waffle-grid" data-count="7"></div>
+                    <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="waffle-grid" data-count="4"></div>
+                </div>
+                <div class="waffle-set" data-panel-code="01-09-21-P102">
+                    <div class="date-label">2021 Sep</div>
+                    <div class="waffle-grid" data-count="11"></div>
+                    <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="waffle-grid" data-count="4"></div>
+                </div>
+                <div class="waffle-set" data-panel-code="01-09-21-P104">
+                    <div class="date-label">2021 Sep</div>
+                    <div class="waffle-grid" data-count="6"></div>
+                    <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="waffle-grid" data-count="4"></div>
+                </div>
+                <div class="waffle-set" data-panel-code="06-09-22-P61">
+                    <div class="date-label">2022 Sep</div>
+                    <div class="waffle-grid" data-count="6"></div>
+                    <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="waffle-grid" data-count="4"></div>
+                </div>
+                <div class="waffle-set" data-panel-code="05-09-23-P220">
+                    <div class="date-label">2023 Sep</div>
+                    <div class="waffle-grid" data-count="12"></div>
+                    <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="waffle-grid" data-count="4"></div>
+                </div>
+                <div class="waffle-set" data-panel-code="07-03-24-P20">
+                    <div class="date-label">2024 Mar</div>
+                    <div class="waffle-grid" data-count="12"></div>
+                    <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div class="waffle-grid" data-count="4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+  <script>
+    const data = {
+      ELOISEGRILLS: {
+        headshot: 'https://placehold.co/120x120?text=Eloise+Grills',
+        assessorCount: 1,
+        grantsAmount: 29917,
+        waffleData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [0],
+          '07-03-24-P20': []
+        },
+        granteesData: {
+          '01-10-19-P170': [0],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        }
+      },
+      GRACEHEIFITZ: {
+        headshot: 'https://placehold.co/120x120?text=Grace+Heifitz',
+        assessorCount: 2,
+        grantsAmount: 92046,
+        waffleData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [0],
+          '01-09-21-P104': [0],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        },
+        granteesData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [0],
+          '05-09-23-P220': [0],
+          '07-03-24-P20': []
+        }
+      },
+      FIONAWRIGHT: {
+        headshot: 'https://placehold.co/120x120?text=Fiona+Wright',
+        assessorCount: 2,
+        grantsAmount: 35000,
+        waffleData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [0],
+          '05-09-23-P220': [1],
+          '07-03-24-P20': []
+        },
+        granteesData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [0],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        }
+      },
+      JULIEJANSON: {
+        headshot: 'https://placehold.co/120x120?text=Julie+Janson',
+        assessorCount: 1,
+        grantsAmount: 70000,
+        waffleData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [1],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        },
+        granteesData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [1],
+          '05-09-23-P220': [],
+          '07-03-24-P20': [0]
+        }
+      },
+      EMILYBITTO: {
+        headshot: 'https://placehold.co/120x120?text=Emily+Bitto',
+        assessorCount: 2,
+        grantsAmount: 59900,
+        waffleData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [2],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': [0]
+        },
+        granteesData: {
+          '01-10-19-P170': [1],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [2],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        }
+      },
+      OUYANGYU: {
+        headshot: 'https://placehold.co/120x120?text=Ouyang+Yu',
+        assessorCount: 1,
+        grantsAmount: 80000,
+        waffleData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [1],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        },
+        granteesData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [0],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        }
+      },
+      INGASIMPSON: {
+        headshot: 'https://placehold.co/120x120?text=Inga+Simpson',
+        assessorCount: 1,
+        grantsAmount: 50000,
+        waffleData: {
+          '01-10-19-P170': [0],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': []
+        },
+        granteesData: {
+          '01-10-19-P170': [],
+          '01-09-21-P102': [],
+          '01-09-21-P104': [],
+          '06-09-22-P61': [],
+          '05-09-23-P220': [],
+          '07-03-24-P20': [1]
+        }
+      }
+    };
+
+    const dropdown = document.getElementById('personDropdown');
+    const headshot = document.getElementById('headshot');
+
+    // Set your custom dot colors for each waffle-set (by date)
+    const dotColors = {
+      // 1. Violet, the rest gray (7 dots)
+      '01-10-19-P170': [
+        'rgba(181,101,167,0.3)', // Violet
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 2. gold, sky blue, hot pink, the rest gray (11 dots)
+      '01-09-21-P102': [
+        'rgba(255,215,0,0.3)',   // Gold
+        'rgba(66,165,245,0.3)',  // Sky Blue
+        'rgba(236,64,122,0.3)',  // Hot Pink
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 3. gold, the rest gray (6 dots)
+      '01-09-21-P104': [
+        'rgba(255,215,0,0.3)',   // Gold
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 4. bright green, turquoise, the rest gray (6 dots)
+      '06-09-22-P61': [
+        'rgba(67,216,110,0.3)',  // Bright Green
+        'rgba(0,184,212,0.3)',   // Turquoise
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 5. red-orange, bright green, the rest gray (12 dots)
+      '05-09-23-P220': [
+        'rgba(255,111,97,0.3)',  // Red-Orange
+        'rgba(67,216,110,0.3)',  // Bright Green
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 6. hot pink, the rest gray (12 dots)
+      '07-03-24-P20': [
+        'rgba(236,64,122,0.3)',  // Hot Pink
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ]
+    };
+
+    // Grantees row dot colors (second waffle-grid in each set)
+    const dotColorsGrantees = {
+      // 1. Red-orange, hot pink, rest gray
+      '01-10-19-P170': [
+        'rgba(255,111,97,0.3)', // Red-orange
+        'rgba(236,64,122,0.3)', // Hot pink
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 2. Bright green, rest gray
+      '01-09-21-P102': [
+        'rgba(67,216,110,0.3)', // Bright green
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 3. Turquoise, rest gray
+      '01-09-21-P104': [
+        'rgba(0,184,212,0.3)', // Turquoise
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 4. Gold, Sky blue, hot pink, rest gray
+      '06-09-22-P61': [
+        'rgba(255,215,0,0.3)', // Gold
+        'rgba(66,165,245,0.3)', // Sky blue
+        'rgba(236,64,122,0.3)', // Hot pink
+        'rgba(204,204,204,0.3)'
+      ],
+      // 5. Gold, rest gray
+      '05-09-23-P220': [
+        'rgba(255,215,0,0.3)', // Gold
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ],
+      // 6. Sky blue, violet, rest gray
+      '07-03-24-P20': [
+        'rgba(66,165,245,0.3)', // Sky blue
+        'rgba(181,101,167,0.3)', // Violet
+        'rgba(204,204,204,0.3)',
+        'rgba(204,204,204,0.3)'
+      ]
+    };
+
+    document.querySelectorAll('.waffle-set').forEach(set => {
+      const panelCode = set.getAttribute('data-panel-code');
+      const grids = set.querySelectorAll('.waffle-grid');
+      // Top row (panel):
+      if (grids[0]) {
+        const count = parseInt(grids[0].dataset.count, 10) || 0;
+        const colors = dotColors[panelCode] || [];
+        for (let i = 0; i < count; i++) {
+          const dot = document.createElement('div');
+          dot.classList.add('dot');
+          dot.dataset.index = i;
+          if (colors[i]) {
+            dot.style.background = colors[i];
+            dot.dataset.baseColor = colors[i];
+          }
+          grids[0].appendChild(dot);
+        }
+      }
+      // Grantees row:
+      if (grids[1]) {
+        const count = parseInt(grids[1].dataset.count, 10) || 0;
+        const colors = dotColorsGrantees[panelCode] || [];
+        for (let i = 0; i < count; i++) {
+          const dot = document.createElement('div');
+          dot.classList.add('dot');
+          dot.dataset.index = i;
+          if (colors[i]) {
+            dot.style.background = colors[i];
+            dot.dataset.baseColor = colors[i];
+          } else {
+            dot.style.background = 'rgba(204,204,204,0.3)';
+            dot.dataset.baseColor = 'rgba(204,204,204,0.3)';
+          }
+          grids[1].appendChild(dot);
+        }
+        // Add ellipsis span to the end of the grantees row
+        const ellipsis = document.createElement('span');
+        ellipsis.textContent = '...';
+        ellipsis.style.marginLeft = '6px';
+        ellipsis.style.fontSize = '12px';
+        ellipsis.style.verticalAlign = 'middle';
+        grids[1].appendChild(ellipsis);
+      }
+    });
+
+    function rgbaToOpaque(rgba) {
+      // Convert rgba(r,g,b,0.5) to rgba(r,g,b,1)
+      return rgba.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/, 'rgba($1,$2,$3,1)');
+    }
+
+    dropdown.addEventListener('change', () => {
+      const person = data[dropdown.value];
+      if (!person) return;
+      headshot.src = person.headshot;
+
+      // Find the first highlighted dot's color (opaque version)
+      let highlightColor = null;
+      outer: for (const [panelCode, indices] of Object.entries(person.waffleData)) {
+        if (indices && indices.length > 0) {
+          const panelColors = dotColors[panelCode] || [];
+          for (const idx of indices) {
+            if (panelColors[idx]) {
+              highlightColor = rgbaToOpaque(panelColors[idx]);
+              break outer;
+            }
+          }
+        }
+      }
+      // If no highlight, fallback to gray
+      if (!highlightColor) highlightColor = '#ccc';
+      headshot.style.borderColor = highlightColor;
+
+      // Update the color, underline, and text of the two spans
+      const assessorCountSpan = document.getElementById('assessor-count-span');
+      const grantsAmountSpan = document.getElementById('grants-amount-span');
+      if (assessorCountSpan) {
+        assessorCountSpan.style.color = highlightColor;
+        assessorCountSpan.style.textDecorationColor = highlightColor;
+        assessorCountSpan.textContent = `${person.assessorCount} ${person.assessorCount === 1 ? 'time' : 'times'}`;
+      }
+      if (grantsAmountSpan) {
+        grantsAmountSpan.style.color = highlightColor;
+        grantsAmountSpan.style.textDecorationColor = highlightColor;
+        grantsAmountSpan.textContent = `$${person.grantsAmount.toLocaleString()}`;
+      }
+
+      // Update waffle highlights (outline and fill opacity)
+      document.querySelectorAll('.waffle-set').forEach(set => {
+        const panelCode = set.getAttribute('data-panel-code');
+        const panelHighlights = person.waffleData[panelCode] || [];
+        const granteesHighlights = person.granteesData ? (person.granteesData[panelCode] || []) : [];
+        const grids = set.querySelectorAll('.waffle-grid');
+        // Panel row (first grid)
+        if (grids[0]) {
+          grids[0].querySelectorAll('.dot').forEach(dot => {
+            const idx = Number(dot.dataset.index);
+            const baseColor = dot.dataset.baseColor;
+            if (panelHighlights.includes(idx)) {
+              dot.classList.add('highlight');
+              if (baseColor && baseColor.startsWith('rgba')) {
+                dot.style.background = rgbaToOpaque(baseColor);
+              }
+            } else {
+              dot.classList.remove('highlight');
+              if (baseColor) {
+                dot.style.background = baseColor;
+              }
+            }
+          });
+        }
+        // Grantees row (second grid)
+        if (grids[1]) {
+          grids[1].querySelectorAll('.dot').forEach(dot => {
+            const idx = Number(dot.dataset.index);
+            const baseColor = dot.dataset.baseColor;
+            if (granteesHighlights.includes(idx)) {
+              dot.classList.add('highlight');
+              if (baseColor && baseColor.startsWith('rgba')) {
+                dot.style.background = rgbaToOpaque(baseColor);
+              }
+            } else {
+              dot.classList.remove('highlight');
+              if (baseColor) {
+                dot.style.background = baseColor;
+              }
+            }
+          });
+        }
+      });
+    });
+
+    // Trigger initial load (ensure Emily Bitto is selected by default)
+    dropdown.value = 'EMILYBITTO';
+    dropdown.dispatchEvent(new Event('change'));
+  </script>
+
+</body>
+</html>
