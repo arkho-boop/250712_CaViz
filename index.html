@@ -63,7 +63,7 @@
       display: block;
       width: 120px;
       height: 120px;
-      border-radius: 50%;
+      border-radius: 25%;
       object-fit: cover;
       margin-bottom: 10px;
       transition: opacity 0.5s ease, border 0.3s;
@@ -88,7 +88,7 @@
 
     .waffle-grid {
       display: grid;
-      grid-template-columns: repeat(3, 10px);
+      grid-template-columns: repeat(3, 11px);
       grid-gap: 2px;
       margin-left: auto;
       margin-right: auto;
@@ -115,6 +115,8 @@
       font-size: 9px;
       padding-left: 5px;
       padding-right: 5px;
+      width: 40px;
+      text-align: center;
     }
 
     .summary {
@@ -126,11 +128,10 @@
 <body style="width: 100%; max-width: 600px; min-width: 300px;padding:0px;margin: 0px; border: 0px;">
     <div id="top-wrapper" style="float:left; width:100%; padding:0px;margin: 0px; border: 0px;">
         <div id="top-contents" style="margin:auto; display:flex; flex-direction:column; align-items:center;">
-            <h2>Revolving Door</h2>
+            <h2>Revolving Door?</h2>
             <p style="width:300px; line-height: 1.75;">            
                 <select id="personDropdown" style="margin: 0px; padding: 2px;">
-                  <option value="ELOISEGRILLS">Eloise Grills</option>
-                  <option value="GRACEHEIFITZ">Grace Heifitz</option>
+                  <option value="GRACEHEIFITZ">Grace Heifetz</option>
                   <option value="FIONAWRIGHT">Fiona Wright</option>
                   <option value="JULIEJANSON">Julie Janson</option>
                   <option value="EMILYBITTO" selected>Emily Bitto</option>
@@ -154,37 +155,37 @@
                   <div style="min-height: 60px; width: 100%; display: flex; align-items: center; justify-content: right;">GRANTEES</div>
                 </div>
                 <div class="waffle-set" data-panel-code="01-10-19-P170">
-                    <div class="date-label">2019 Oct</div>
+                    <div class="date-label">2019</div>
                     <div class="waffle-grid" data-count="7"></div>
                     <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                     <div class="waffle-grid" data-count="4"></div>
                 </div>
                 <div class="waffle-set" data-panel-code="01-09-21-P102">
-                    <div class="date-label">2021 Sep</div>
+                    <div class="date-label">2021</div>
                     <div class="waffle-grid" data-count="11"></div>
                     <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                     <div class="waffle-grid" data-count="4"></div>
                 </div>
                 <div class="waffle-set" data-panel-code="01-09-21-P104">
-                    <div class="date-label">2021 Sep</div>
+                    <div class="date-label">2021</div>
                     <div class="waffle-grid" data-count="6"></div>
                     <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                     <div class="waffle-grid" data-count="4"></div>
                 </div>
                 <div class="waffle-set" data-panel-code="06-09-22-P61">
-                    <div class="date-label">2022 Sep</div>
+                    <div class="date-label">2022</div>
                     <div class="waffle-grid" data-count="6"></div>
                     <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                     <div class="waffle-grid" data-count="4"></div>
                 </div>
                 <div class="waffle-set" data-panel-code="05-09-23-P220">
-                    <div class="date-label">2023 Sep</div>
+                    <div class="date-label">2023</div>
                     <div class="waffle-grid" data-count="12"></div>
                     <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                     <div class="waffle-grid" data-count="4"></div>
                 </div>
                 <div class="waffle-set" data-panel-code="07-03-24-P20">
-                    <div class="date-label">2024 Mar</div>
+                    <div class="date-label">2024</div>
                     <div class="waffle-grid" data-count="12"></div>
                     <div class="summary"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 3V17M10 17L4 11M10 17L16 11" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
                     <div class="waffle-grid" data-count="4"></div>
@@ -201,29 +202,8 @@
 
   <script>
     const data = {
-      ELOISEGRILLS: {
-        headshot: 'https://placehold.co/120x120?text=Eloise+Grills',
-        assessorCount: 1,
-        grantsAmount: 29917,
-        waffleData: {
-          '01-10-19-P170': [],
-          '01-09-21-P102': [],
-          '01-09-21-P104': [],
-          '06-09-22-P61': [],
-          '05-09-23-P220': [0],
-          '07-03-24-P20': []
-        },
-        granteesData: {
-          '01-10-19-P170': [0],
-          '01-09-21-P102': [],
-          '01-09-21-P104': [],
-          '06-09-22-P61': [],
-          '05-09-23-P220': [],
-          '07-03-24-P20': []
-        }
-      },
       GRACEHEIFITZ: {
-        headshot: 'https://placehold.co/120x120?text=Grace+Heifitz',
+        headshot: 'headshots/GraceHeifetz.jpg',
         assessorCount: 2,
         grantsAmount: 92046,
         waffleData: {
@@ -244,7 +224,7 @@
         }
       },
       FIONAWRIGHT: {
-        headshot: 'https://placehold.co/120x120?text=Fiona+Wright',
+        headshot: 'headshots/FionaWright.jpg',
         assessorCount: 2,
         grantsAmount: 35000,
         waffleData: {
@@ -252,7 +232,7 @@
           '01-09-21-P102': [],
           '01-09-21-P104': [],
           '06-09-22-P61': [0],
-          '05-09-23-P220': [1],
+          '05-09-23-P220': [0],
           '07-03-24-P20': []
         },
         granteesData: {
@@ -265,7 +245,7 @@
         }
       },
       JULIEJANSON: {
-        headshot: 'https://placehold.co/120x120?text=Julie+Janson',
+        headshot: 'headshots/JulieJanson.jpg',
         assessorCount: 1,
         grantsAmount: 70000,
         waffleData: {
@@ -286,7 +266,7 @@
         }
       },
       EMILYBITTO: {
-        headshot: 'https://placehold.co/120x120?text=Emily+Bitto',
+        headshot: 'headshots/EmilyBitto1.jpg',
         assessorCount: 2,
         grantsAmount: 59900,
         waffleData: {
@@ -298,7 +278,7 @@
           '07-03-24-P20': [0]
         },
         granteesData: {
-          '01-10-19-P170': [1],
+          '01-10-19-P170': [0],
           '01-09-21-P102': [],
           '01-09-21-P104': [],
           '06-09-22-P61': [2],
@@ -307,7 +287,7 @@
         }
       },
       OUYANGYU: {
-        headshot: 'https://placehold.co/120x120?text=Ouyang+Yu',
+        headshot: 'headshots/OuyangLu.jpg',
         assessorCount: 1,
         grantsAmount: 80000,
         waffleData: {
@@ -328,7 +308,7 @@
         }
       },
       INGASIMPSON: {
-        headshot: 'https://placehold.co/120x120?text=Inga+Simpson',
+        headshot: 'headshots/IngaSimpson.jpg',
         assessorCount: 1,
         grantsAmount: 50000,
         waffleData: {
@@ -398,9 +378,9 @@
         'rgba(204,204,204,0.3)'
       ],
       // 5. red-orange, bright green, the rest gray (12 dots)
-      '05-09-23-P220': [
-        'rgba(255,111,97,0.3)',  // Red-Orange
+      '05-09-23-P220': [ 
         'rgba(67,216,110,0.3)',  // Bright Green
+        'rgba(204,204,204,0.3)',
         'rgba(204,204,204,0.3)',
         'rgba(204,204,204,0.3)',
         'rgba(204,204,204,0.3)',
@@ -433,8 +413,8 @@
     const dotColorsGrantees = {
       // 1. Red-orange, hot pink, rest gray
       '01-10-19-P170': [
-        'rgba(255,111,97,0.3)', // Red-orange
         'rgba(236,64,122,0.3)', // Hot pink
+        'rgba(204,204,204,0.3)',
         'rgba(204,204,204,0.3)',
         'rgba(204,204,204,0.3)'
       ],
